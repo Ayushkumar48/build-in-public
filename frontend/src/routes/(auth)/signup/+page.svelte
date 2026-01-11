@@ -1,0 +1,121 @@
+<script lang="ts">
+    import { resolve } from "$app/paths";
+    import { AuthService, ApiError } from "$lib/api-client";
+    import CompanyLogo from "$lib/assets/company-logo.svelte";
+    import GoogleIcon from "$lib/assets/google-icon.svelte";
+    import MicrosoftIcon from "$lib/assets/microsoft-icon.svelte";
+    import { Button } from "$lib/components/ui/button";
+    import { Input } from "$lib/components/ui/input";
+    import { Label } from "$lib/components/ui/label";
+    import { toast } from "svelte-sonner";
+
+    let signupData = $state({
+        name: "",
+        email: "",
+        password: "",
+    });
+
+    async function signup() {
+        try {
+            const data = await AuthService.postAuthSignup({
+                name: signupData.name,
+                email: signupData.email,
+                password: signupData.password,
+            });
+
+            toast.success(
+                `Welcome, ${data.name || "User"}! Account created successfully.`,
+            );
+            window.location.href = "/";
+        } catch (error) {
+            if (error instanceof ApiError) {
+                const errorBody = error.body as { error?: string };
+                toast.error(errorBody?.error || "Signup failed");
+            } else {
+                toast.error("Signup failed");
+            }
+            console.error(error);
+        }
+    }
+</script>
+
+<section
+    class="flex min-h-screen bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent"
+>
+    <form
+        action=""
+        class="bg-card m-auto h-fit w-full max-w-sm rounded-[calc(var(--radius)+.125rem)] border p-0.5 shadow-md dark:[--color-muted:var(--color-zinc-900)]"
+    >
+        <div class="p-8 pb-6">
+            <div>
+                <a href={resolve("/")} aria-label="go home">
+                    <CompanyLogo />
+                </a>
+                <h1 class="text-title mb-1 mt-4 text-xl font-semibold">
+                    Create a Tailus UI Account
+                </h1>
+                <p class="text-sm">Welcome! Create an account to get started</p>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-3">
+                <Button type="button" variant="outline">
+                    <GoogleIcon />
+                    <span>Google</span>
+                </Button>
+                <Button type="button" variant="outline">
+                    <MicrosoftIcon />
+                    <span>Microsoft</span>
+                </Button>
+            </div>
+
+            <hr class="my-4 border-dashed" />
+
+            <div class="space-y-5">
+                <div class="space-y-2">
+                    <Label for="name" class="block text-sm">Name</Label>
+                    <Input
+                        type="text"
+                        required
+                        name="name"
+                        id="name"
+                        bind:value={signupData.name}
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <Label for="email" class="block text-sm">Username</Label>
+                    <Input
+                        type="email"
+                        required
+                        name="email"
+                        id="email"
+                        bind:value={signupData.email}
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <Label for="pwd" class="text-title text-sm">Password</Label>
+                    <Input
+                        type="password"
+                        required
+                        name="pwd"
+                        id="pwd"
+                        class="input sz-md variant-mixed"
+                        bind:value={signupData.password}
+                    />
+                </div>
+
+                <Button class="w-full" onclick={signup}>Create Account</Button>
+            </div>
+        </div>
+
+        <div class="bg-muted rounded-(--radius) border p-3">
+            <p class="text-accent-foreground text-center text-sm">
+                Have an account ?
+                <Button href="/login" variant="link" class="px-2"
+                    >Sign in</Button
+                >
+            </p>
+        </div>
+    </form>
+</section>
