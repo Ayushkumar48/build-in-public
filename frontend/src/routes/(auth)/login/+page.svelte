@@ -36,7 +36,8 @@
 </script>
 
 <section
-    class="flex min-h-screen bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent"
+    onsubmit={login}
+    class="flex min-h-[calc(100vh-64px)] bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent"
 >
     <form
         action=""
@@ -102,7 +103,7 @@
                     />
                 </div>
 
-                <Button class="w-full" onclick={login}>Sign In</Button>
+                <Button class="w-full" type="submit">Sign In</Button>
             </div>
         </div>
 

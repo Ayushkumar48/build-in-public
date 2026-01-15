@@ -38,7 +38,8 @@
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.48.1",
 		"vite": "^7.2.6",
-		"vite-plugin-devtools-json": "^1.0.0"
+		"vite-plugin-devtools-json": "^1.0.0",
+		"jsrepo": "^3.0.10"
 	},
 	"dependencies": {
 		"zod": "^4.3.5"
