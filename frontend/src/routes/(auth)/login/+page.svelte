@@ -8,6 +8,9 @@
     import MicrosoftIcon from "$lib/assets/microsoft-icon.svelte";
     import CompanyLogo from "$lib/assets/company-logo.svelte";
     import { resolve } from "$app/paths";
+    import GithubLogo from "$lib/assets/github-logo.svelte";
+    import LinkedinLogo from "$lib/assets/linkedin-logo.svelte";
+    import { loginWithOAuth } from "$lib/utils";
 
     let loginData = $state({
         email: "",
@@ -55,13 +58,37 @@
             </div>
 
             <div class="mt-6 grid grid-cols-2 gap-3">
-                <Button type="button" variant="outline">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onclick={() => loginWithOAuth("google")}
+                >
                     <GoogleIcon />
                     <span>Google</span>
                 </Button>
-                <Button type="button" variant="outline">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onclick={() => loginWithOAuth("microsoft")}
+                >
                     <MicrosoftIcon />
                     <span>Microsoft</span>
+                </Button>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onclick={() => loginWithOAuth("github")}
+                >
+                    <GithubLogo />
+                    <span>GitHub</span>
+                </Button>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onclick={() => loginWithOAuth("linkedin")}
+                >
+                    <LinkedinLogo />
+                    <span>LinkedIn</span>
                 </Button>
             </div>
 

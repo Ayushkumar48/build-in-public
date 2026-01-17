@@ -31,3 +31,9 @@ export function getInitials(name: string) {
   if (words.length === 1) return words[0].charAt(0).toUpperCase();
   return words.map((word) => word.charAt(0).toUpperCase()).join("");
 }
+
+export function loginWithOAuth(
+  provider: "google" | "github" | "linkedin" | "microsoft",
+) {
+  window.location.href = `${import.meta.env.VITE_API_URL || "http://localhost:8080"}/auth/${provider}`;
+}

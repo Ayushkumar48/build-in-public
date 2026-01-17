@@ -19,6 +19,7 @@
     import { resolve } from "$app/paths";
     import { goto } from "$app/navigation";
     import DarkModeToggler from "./dark-mode-toggler.svelte";
+    import CompanyLogo from "$lib/assets/company-logo.svelte";
 
     let mobileMenuOpen = $state(false);
     let navLinksRefs: HTMLAnchorElement[] = $state([]);
@@ -71,11 +72,7 @@
     <div class="container mx-auto px-4">
         <div class="flex h-14 items-center justify-between">
             <a href={resolve("/")} class="flex items-center gap-2">
-                <div
-                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
-                >
-                    <span class="text-lg font-bold">B</span>
-                </div>
+                <CompanyLogo />
                 <span class="hidden text-lg font-semibold sm:inline-block"
                     >Build In Public</span
                 >

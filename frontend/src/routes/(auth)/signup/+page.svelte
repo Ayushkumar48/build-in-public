@@ -2,11 +2,14 @@
     import { resolve } from "$app/paths";
     import { AuthService, ApiError } from "$lib/api-client";
     import CompanyLogo from "$lib/assets/company-logo.svelte";
+    import GithubLogo from "$lib/assets/github-logo.svelte";
     import GoogleIcon from "$lib/assets/google-icon.svelte";
+    import LinkedinLogo from "$lib/assets/linkedin-logo.svelte";
     import MicrosoftIcon from "$lib/assets/microsoft-icon.svelte";
     import { Button } from "$lib/components/ui/button";
     import { Input } from "$lib/components/ui/input";
     import { Label } from "$lib/components/ui/label";
+    import { loginWithOAuth } from "$lib/utils";
     import { toast } from "svelte-sonner";
 
     let signupData = $state({
@@ -60,13 +63,37 @@
             </div>
 
             <div class="mt-6 grid grid-cols-2 gap-3">
-                <Button type="button" variant="outline">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onclick={() => loginWithOAuth("google")}
+                >
                     <GoogleIcon />
                     <span>Google</span>
                 </Button>
-                <Button type="button" variant="outline">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onclick={() => loginWithOAuth("microsoft")}
+                >
                     <MicrosoftIcon />
                     <span>Microsoft</span>
+                </Button>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onclick={() => loginWithOAuth("github")}
+                >
+                    <GithubLogo />
+                    <span>GitHub</span>
+                </Button>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onclick={() => loginWithOAuth("linkedin")}
+                >
+                    <LinkedinLogo />
+                    <span>LinkedIn</span>
                 </Button>
             </div>
 

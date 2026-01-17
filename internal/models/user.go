@@ -46,6 +46,10 @@ type OAuthAccount struct {
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
 }
 
+func (OAuthAccount) TableName() string {
+	return "oauth_accounts"
+}
+
 type User struct {
 	ID            uuid.UUID       `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
 	FirstName     string          `gorm:"size:255;not null" json:"first_name"`

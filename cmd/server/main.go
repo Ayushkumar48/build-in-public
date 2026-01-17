@@ -11,6 +11,7 @@ import (
 
 	"build-in-public/internal/config"
 	"build-in-public/internal/routes"
+	"build-in-public/internal/services"
 )
 
 func main() {
@@ -19,6 +20,7 @@ func main() {
 	}
 
 	config.ConnectDatabase()
+	services.InitOAuth()
 
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
