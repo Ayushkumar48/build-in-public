@@ -169,6 +169,28 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.OAuthProviderResponse": {
+            "type": "object",
+            "properties": {
+                "provider": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SocialAccountResponse": {
+            "type": "object",
+            "properties": {
+                "platform": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.SuccessResponse": {
             "type": "object",
             "properties": {
@@ -180,25 +202,58 @@ const docTemplate = `{
         "dto.UserResponse": {
             "type": "object",
             "properties": {
+                "bio": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
                 "createdAt": {
+                    "type": "string"
+                },
+                "date_of_birth": {
                     "type": "string"
                 },
                 "email": {
                     "type": "string"
                 },
+                "email_verified": {
+                    "type": "boolean"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "$ref": "#/definitions/models.Gender"
+                },
                 "id": {
                     "type": "string"
                 },
-                "linkedin": {
+                "last_name": {
                     "type": "string"
                 },
-                "name": {
+                "oauth_providers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.OAuthProviderResponse"
+                    }
+                },
+                "phone": {
                     "type": "string"
                 },
-                "phone_no": {
-                    "type": "string"
+                "phone_no_verified": {
+                    "type": "boolean"
+                },
+                "socials": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SocialAccountResponse"
+                    }
                 },
                 "updatedAt": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -222,19 +277,23 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
-                "name",
+                "firstName",
+                "lastName",
                 "password"
             ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
                 "linkedIn": {
                     "type": "string",
                     "maxLength": 255
-                },
-                "name": {
-                    "type": "string"
                 },
                 "password": {
                     "type": "string",
@@ -245,6 +304,19 @@ const docTemplate = `{
                     "maxLength": 20
                 }
             }
+        },
+        "models.Gender": {
+            "type": "string",
+            "enum": [
+                "male",
+                "female",
+                "other"
+            ],
+            "x-enum-varnames": [
+                "GenderMale",
+                "GenderFemale",
+                "GenderOther"
+            ]
         }
     }
 }`

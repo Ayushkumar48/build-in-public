@@ -4,6 +4,20 @@ definitions:
       error:
         type: string
     type: object
+  dto.OAuthProviderResponse:
+    properties:
+      provider:
+        type: string
+    type: object
+  dto.SocialAccountResponse:
+    properties:
+      platform:
+        type: string
+      url:
+        type: string
+      username:
+        type: string
+    type: object
   dto.SuccessResponse:
     properties:
       success:
@@ -11,19 +25,41 @@ definitions:
     type: object
   dto.UserResponse:
     properties:
+      bio:
+        type: string
+      city:
+        type: string
       createdAt:
+        type: string
+      date_of_birth:
         type: string
       email:
         type: string
+      email_verified:
+        type: boolean
+      first_name:
+        type: string
+      gender:
+        $ref: '#/definitions/models.Gender'
       id:
         type: string
-      linkedin:
+      last_name:
         type: string
-      name:
+      oauth_providers:
+        items:
+          $ref: '#/definitions/dto.OAuthProviderResponse'
+        type: array
+      phone:
         type: string
-      phone_no:
-        type: string
+      phone_no_verified:
+        type: boolean
+      socials:
+        items:
+          $ref: '#/definitions/dto.SocialAccountResponse'
+        type: array
       updatedAt:
+        type: string
+      username:
         type: string
     type: object
   handlers.LoginRequest:
@@ -40,10 +76,12 @@ definitions:
     properties:
       email:
         type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
       linkedIn:
         maxLength: 255
-        type: string
-      name:
         type: string
       password:
         minLength: 8
@@ -53,9 +91,20 @@ definitions:
         type: string
     required:
     - email
-    - name
+    - firstName
+    - lastName
     - password
     type: object
+  models.Gender:
+    enum:
+    - male
+    - female
+    - other
+    type: string
+    x-enum-varnames:
+    - GenderMale
+    - GenderFemale
+    - GenderOther
 info:
   contact: {}
 paths:

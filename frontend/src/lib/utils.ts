@@ -20,3 +20,14 @@ export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & {
 export function isActiveUrl(href: string) {
   return page.url.pathname === href;
 }
+
+/**
+ * getInitials
+ * Returns the initials of a given name.
+ * Example: "John Doe" -> "JD"
+ */
+export function getInitials(name: string) {
+  const words = name.split(" ");
+  if (words.length === 1) return words[0].charAt(0).toUpperCase();
+  return words.map((word) => word.charAt(0).toUpperCase()).join("");
+}

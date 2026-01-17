@@ -38,7 +38,10 @@ func RequireAuth() gin.HandlerFunc {
 		}
 
 		var user models.User
-		if err := config.DB.First(&user, "id = ?", session.UserID).Error; err != nil {
+		if err := config.DB.
+			Preload("Socials", "deleted_at IS NULL").
+			First(&user, "id = ?", session.UserID).Error; err != nil {
+
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "user not found"})
 			return
 		}

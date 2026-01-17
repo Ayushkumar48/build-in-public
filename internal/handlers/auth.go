@@ -13,11 +13,12 @@ import (
 )
 
 type SignupRequest struct {
-	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=8"`
-	PhoneNo  string `json:"phoneNo" binding:"max=20"`
-	LinkedIn string `json:"linkedIn" binding:"max=255"`
+	FirstName string `json:"firstName" binding:"required"`
+	LastName  string `json:"lastName" binding:"required"`
+	Email     string `json:"email" binding:"required,email"`
+	Password  string `json:"password" binding:"required,min=8"`
+	Phone     string `json:"phoneNo" binding:"max=20"`
+	LinkedIn  string `json:"linkedIn" binding:"max=255"`
 }
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required,email"`
@@ -62,11 +63,11 @@ func Signup(c *gin.Context) {
 
 	// 3. Create user
 	user := models.User{
-		Name:     req.Name,
-		Email:    req.Email,
-		Password: string(hashedPassword),
-		PhoneNo:  req.PhoneNo,
-		LinkedIn: req.LinkedIn,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+		Email:     req.Email,
+		Password:  string(hashedPassword),
+		Phone:     req.Phone,
 	}
 
 	if err := config.DB.Create(&user).Error; err != nil {
@@ -75,18 +76,31 @@ func Signup(c *gin.Context) {
 		})
 		return
 	}
-
-	// 4. Respond with dto.UserResponse (password is excluded)
-	response := dto.UserResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		PhoneNo:   user.PhoneNo,
-		LinkedIn:  user.LinkedIn,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+	// Create session
+	session := models.Session{
+		UserID:    user.ID,
+		ExpiresAt: time.Now().Add(7 * 24 * time.Hour),
 	}
-	c.JSON(http.StatusCreated, response)
+
+	if err := config.DB.Create(&session).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{
+			Error: "Failed to create a session",
+		})
+		return
+	}
+
+	// Set cookie with SameSite=Lax for localhost compatibility
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie(
+		"session_id",
+		session.ID.String(),
+		60*60*24*7, // 7 days
+		"/",
+		"",
+		false, // true in production (HTTPS)
+		true,  // HttpOnly
+	)
+	c.JSON(http.StatusCreated, dto.SuccessResponse{Success: "User created successfully"})
 }
 
 // Login godoc

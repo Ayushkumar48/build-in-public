@@ -6,12 +6,10 @@
     import Heart from "@lucide/svelte/icons/heart";
     import MessageCircle from "@lucide/svelte/icons/message-circle";
     import Share2 from "@lucide/svelte/icons/share-2";
-    import TrendingUp from "@lucide/svelte/icons/trending-up";
-    import Users from "@lucide/svelte/icons/users";
     import Rocket from "@lucide/svelte/icons/rocket";
     import Quote from "@lucide/svelte/icons/quote";
+    import { user } from "$lib/store/user.svelte";
 
-    // Mock data for posts
     const posts = [
         {
             id: 1,
@@ -70,59 +68,56 @@
             tags: ["failure", "learning", "resilience"],
         },
     ];
-
-    const stats = [
-        { label: "Active Builders", value: "12.5K", icon: Users },
-        { label: "Projects Shipped", value: "3.2K", icon: Rocket },
-        { label: "Success Stories", value: "890", icon: TrendingUp },
-    ];
 </script>
 
 <div class="min-h-screen bg-linear-to-b from-background to-muted/20">
-    <!-- Hero Section -->
     <section class="relative overflow-hidden border-b bg-background">
         <div
             class="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-size-[4rem_4rem] opacity-5"
         ></div>
         <div
-            class="container relative mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8"
+            class="container relative mx-auto max-w-6xl px-4 pt-2 pb-4 sm:px-6 lg:px-8"
         >
             <div class="flex flex-col items-center text-center">
-                <!-- Main Heading -->
-                <div
-                    class="mb-4 inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-2 text-sm font-medium"
-                >
-                    <Rocket class="h-4 w-4 text-primary" />
-                    <span>Build. Learn. Share. Grow.</span>
-                </div>
-
-                <h1
-                    class="mb-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
-                >
-                    Build Your Dreams
-                    <span
-                        class="block bg-linear-to-r from-primary to-chart-1 bg-clip-text text-transparent"
+                {#if user.isLoading}
+                    <div
+                        class="mb-4 inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-2 text-sm font-medium"
                     >
-                        In Public
-                    </span>
-                </h1>
-
-                <p
-                    class="mb-6 max-w-2xl text-base text-muted-foreground sm:text-lg"
-                >
-                    Join a community of makers, builders, and entrepreneurs
-                    sharing their journey. Learn from failures, celebrate wins,
-                    and grow together.
-                </p>
-
-                <!-- Quote Card -->
-                <Card.Root
-                    class="relative mb-6 max-w-xl overflow-hidden border-2"
-                >
-                    <div class="absolute right-3 top-3 opacity-10">
-                        <Quote class="h-16 w-16" />
+                        <Rocket class="h-4 w-4 text-primary" />
+                        <span>Loading...</span>
                     </div>
-                    <Card.Content class="relative p-4">
+                {:else if !user.isAuthenticated}
+                    <div
+                        class="mb-4 inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-2 text-sm font-medium"
+                    >
+                        <Rocket class="h-4 w-4 text-primary" />
+                        <span>Build. Learn. Share. Grow.</span>
+                    </div>
+
+                    <h1
+                        class="mb-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
+                    >
+                        Build Your Dreams
+                        <span
+                            class="block bg-linear-to-r from-primary to-chart-1 bg-clip-text text-transparent"
+                        >
+                            In Public
+                        </span>
+                    </h1>
+
+                    <p
+                        class="mb-6 max-w-2xl text-base text-muted-foreground sm:text-lg"
+                    >
+                        Join a community of makers, builders, and entrepreneurs
+                        sharing their journey. Learn from failures, celebrate
+                        wins, and grow together.
+                    </p>
+                {:else}
+                    <Quote class="size-8 opacity-50 pb-2" />
+                {/if}
+
+                <Card.Root class="max-w-xl overflow-hidden border-2">
+                    <Card.Content>
                         <blockquote class="text-center">
                             <p
                                 class="mb-2 text-base font-medium italic sm:text-lg"
@@ -137,38 +132,10 @@
                         </blockquote>
                     </Card.Content>
                 </Card.Root>
-
-                <!-- Stats -->
-                <div class="mb-6 grid w-full max-w-2xl grid-cols-3 gap-3">
-                    {#each stats as stat (stat.label)}
-                        <div
-                            class="flex flex-col items-center rounded-lg border bg-card p-4 transition-all hover:shadow-md"
-                        >
-                            <svelte:component
-                                this={stat.icon}
-                                class="mb-1 h-5 w-5 text-primary"
-                            />
-                            <div class="text-2xl font-bold">{stat.value}</div>
-                            <div class="text-xs text-muted-foreground">
-                                {stat.label}
-                            </div>
-                        </div>
-                    {/each}
-                </div>
-
-                <!-- CTA Buttons -->
-                <div class="flex flex-wrap items-center justify-center gap-3">
-                    <Button class="gap-2">
-                        <Rocket class="h-4 w-4" />
-                        Start Building
-                    </Button>
-                    <Button variant="outline">Explore Projects</Button>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Posts Feed Section -->
     <section class="container mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         <div class="mb-8 flex items-center justify-between">
             <div>
@@ -181,7 +148,6 @@
             </div>
         </div>
 
-        <!-- Posts -->
         <div class="space-y-6">
             {#each posts as post (post.id)}
                 <Card.Root class="transition-all hover:shadow-lg">
@@ -221,7 +187,6 @@
                             {post.content}
                         </p>
 
-                        <!-- Tags -->
                         <div class="flex flex-wrap gap-2">
                             {#each post.tags as tag (tag)}
                                 <span
@@ -268,7 +233,6 @@
             {/each}
         </div>
 
-        <!-- Load More -->
         <div class="mt-8 flex justify-center">
             <Button variant="outline" size="lg">Load More Updates</Button>
         </div>

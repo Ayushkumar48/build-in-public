@@ -15,13 +15,13 @@
     import * as Sheet from "$lib/components/ui/sheet";
     import { AuthService } from "$lib/api-client";
     import { toast } from "svelte-sonner";
-    import { cn, isActiveUrl } from "$lib/utils";
+    import { cn, getInitials, isActiveUrl } from "$lib/utils";
     import { resolve } from "$app/paths";
     import { goto } from "$app/navigation";
     import DarkModeToggler from "./dark-mode-toggler.svelte";
 
     let mobileMenuOpen = $state(false);
-    let navLinksRefs: HTMLAnchorElement[] = [];
+    let navLinksRefs: HTMLAnchorElement[] = $state([]);
     let indicatorLeft = $state(0);
     let indicatorWidth = $state(0);
 
@@ -116,9 +116,9 @@
                         <DropdownMenu.Trigger>
                             <Avatar.Root>
                                 <Avatar.Fallback>
-                                    {user.current?.name
-                                        ?.charAt(0)
-                                        .toUpperCase() || "U"}
+                                    {getInitials(
+                                        user.current?.first_name || "",
+                                    )}
                                 </Avatar.Fallback>
                             </Avatar.Root>
                         </DropdownMenu.Trigger>
@@ -130,7 +130,8 @@
                             <DropdownMenu.Label class="font-normal">
                                 <div class="flex flex-col space-y-1">
                                     <p class="text-sm font-medium leading-none">
-                                        {user.current?.name || "User"}
+                                        {user.current?.first_name || "User"}
+                                        {user.current?.last_name || ""}
                                     </p>
                                     <p
                                         class="text-xs leading-none text-muted-foreground"

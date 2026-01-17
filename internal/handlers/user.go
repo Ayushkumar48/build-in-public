@@ -30,15 +30,7 @@ func Me(c *gin.Context) {
 		return
 	}
 
-	response := dto.UserResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		PhoneNo:   user.PhoneNo,
-		LinkedIn:  user.LinkedIn,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	}
+	response := dto.ToUserResponse(user)
 
 	c.JSON(http.StatusOK, response)
 }

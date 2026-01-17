@@ -4,8 +4,9 @@
 /* eslint-disable */
 export type handlers_SignupRequest = {
     email: string;
+    firstName: string;
+    lastName: string;
     linkedIn?: string;
-    name: string;
     password: string;
     phoneNo?: string;
 };

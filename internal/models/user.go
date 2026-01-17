@@ -7,14 +7,49 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type SocialAccount struct {
 	ID        uuid.UUID      `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
-	Name      string         `gorm:"not null" json:"name"`
-	Email     string         `gorm:"uniqueIndex;not null" json:"email"`
-	PhoneNo   string         `gorm:"size:20" json:"phone_no"`
-	LinkedIn  string         `gorm:"size:255" json:"linkedin"`
-	Password  string         `gorm:"not null" json:"-"`
+	UserID    uuid.UUID      `gorm:"type:uuid;not null;index" json:"user_id"`
+	Platform  SocialPlatform `gorm:"type:varchar(50);not null;uniqueIndex:idx_user_platform" json:"platform"`
+	Username  string         `gorm:"size:255;not null" json:"username"`
+	URL       string         `gorm:"size:255" json:"url"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+}
+
+type OAuthAccount struct {
+	ID           uuid.UUID     `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+	UserID       uuid.UUID     `gorm:"type:uuid;not null;index"`
+	Provider     OAuthProvider `gorm:"type:varchar(50);not null;uniqueIndex:idx_provider_uid"`
+	ProviderUID  string        `gorm:"size:255;not null;uniqueIndex:idx_provider_uid"`
+	Email        string        `gorm:"size:255"`
+	AvatarURL    string        `gorm:"size:500"`
+	AccessToken  string        `gorm:"type:text"`
+	RefreshToken string        `gorm:"type:text"`
+	ExpiresAt    *time.Time
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    gorm.DeletedAt `gorm:"index"`
+}
+
+type User struct {
+	ID            uuid.UUID       `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	FirstName     string          `gorm:"size:255;not null" json:"first_name"`
+	LastName      string          `gorm:"size:255;" json:"last_name"`
+	Email         string          `gorm:"uniqueIndex;not null" json:"email"`
+	EmailVerified bool            `gorm:"not null" json:"email_verified"`
+	Username      string          `gorm:"size:255;" json:"username"`
+	Phone         string          `gorm:"size:20" json:"phone"`
+	PhoneVerified bool            `gorm:"not null" json:"phone_verified"`
+	Gender        Gender          `gorm:"type:varchar(10);not null" json:"gender"`
+	DateOfBirth   time.Time       `gorm:"type:date;not null" json:"date_of_birth"`
+	City          string          `gorm:"size:255" json:"city"`
+	Bio           string          `gorm:"size:255" json:"bio"`
+	Password      string          `json:"-"`
+	OAuthAccounts []OAuthAccount  `gorm:"foreignKey:UserID" json:"oauth_accounts"`
+	Socials       []SocialAccount `gorm:"foreignKey:UserID" json:"socials"`
+	CreatedAt     time.Time       `json:"created_at"`
+	UpdatedAt     time.Time       `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt  `gorm:"index" json:"-"`
 }

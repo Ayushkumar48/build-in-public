@@ -10,7 +10,8 @@
     import { toast } from "svelte-sonner";
 
     let signupData = $state({
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
     });
@@ -18,13 +19,14 @@
     async function signup() {
         try {
             const data = await AuthService.postAuthSignup({
-                name: signupData.name,
+                firstName: signupData.firstName,
+                lastName: signupData.lastName,
                 email: signupData.email,
                 password: signupData.password,
             });
 
             toast.success(
-                `Welcome, ${data.name || "User"}! Account created successfully.`,
+                `Welcome, ${data.first_name || "User"} ${data.last_name || ""}! Account created successfully.`,
             );
             window.location.href = "/";
         } catch (error) {
@@ -44,7 +46,7 @@
 >
     <form
         onsubmit={signup}
-        class="bg-card m-auto h-fit w-full max-w-sm rounded-[calc(var(--radius)+.125rem)] border p-0.5 shadow-md dark:[--color-muted:var(--color-zinc-900)]"
+        class="bg-card m-auto h-fit w-full max-w-lg rounded-[calc(var(--radius)+.125rem)] border p-0.5 shadow-md dark:[--color-muted:var(--color-zinc-900)]"
     >
         <div class="p-8 pb-6">
             <div>
@@ -71,15 +73,31 @@
             <hr class="my-4 border-dashed" />
 
             <div class="space-y-5">
-                <div class="space-y-2">
-                    <Label for="name" class="block text-sm">Name</Label>
-                    <Input
-                        type="text"
-                        required
-                        name="name"
-                        id="name"
-                        bind:value={signupData.name}
-                    />
+                <div class="flex gap-x-2">
+                    <div class="space-y-2 w-full">
+                        <Label for="firstName" class="block text-sm"
+                            >First Name</Label
+                        >
+                        <Input
+                            type="text"
+                            required
+                            name="firstName"
+                            id="firstName"
+                            bind:value={signupData.firstName}
+                        />
+                    </div>
+                    <div class="space-y-2 w-full">
+                        <Label for="lastName" class="block text-sm"
+                            >Last Name</Label
+                        >
+                        <Input
+                            type="text"
+                            required
+                            name="lastName"
+                            id="lastName"
+                            bind:value={signupData.lastName}
+                        />
+                    </div>
                 </div>
 
                 <div class="space-y-2">
