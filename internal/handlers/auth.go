@@ -62,14 +62,17 @@ func Signup(c *gin.Context) {
 	}
 
 	// 3. Create user
-	user := models.User{
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
-		Email:     req.Email,
-		Password:  string(hashedPassword),
-		Phone:     req.Phone,
-	}
+	hashed := string(hashedPassword)
 
+	user := models.User{
+		FirstName:     req.FirstName,
+		LastName:      &req.LastName,
+		Email:         req.Email,
+		Password:      &hashed,
+		Phone:         nil,
+		EmailVerified: false,
+		PhoneVerified: false,
+	}
 	if err := config.DB.Create(&user).Error; err != nil {
 		c.JSON(http.StatusConflict, dto.ErrorResponse{
 			Error: "Email already exists",
@@ -133,9 +136,15 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Compare password
+	if user.Password == nil {
+		c.JSON(http.StatusUnauthorized, dto.ErrorResponse{
+			Error: "Use OAuth login",
+		})
+		return
+	}
+
 	if err := bcrypt.CompareHashAndPassword(
-		[]byte(user.Password),
+		[]byte(*user.Password),
 		[]byte(req.Password),
 	); err != nil {
 		c.JSON(http.StatusUnauthorized, dto.ErrorResponse{

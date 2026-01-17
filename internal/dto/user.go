@@ -17,23 +17,33 @@ type OAuthProviderResponse struct {
 	Provider string `json:"provider"`
 }
 
+type CollegeResponse struct {
+	ID      uuid.UUID `json:"id"`
+	Name    string    `json:"name"`
+	Domain  string    `json:"domain"`
+	City    string    `json:"city,omitempty"`
+	State   string    `json:"state,omitempty"`
+	Country string    `json:"country,omitempty"`
+}
+
 type UserResponse struct {
 	ID              uuid.UUID               `json:"id"`
 	FirstName       string                  `json:"first_name"`
-	LastName        string                  `json:"last_name"`
+	LastName        *string                 `json:"last_name,omitempty"`
 	Email           string                  `json:"email"`
-	Username        string                  `json:"username"`
-	Phone           string                  `json:"phone"`
-	Socials         []SocialAccountResponse `json:"socials"`
-	OAuthProviders  []OAuthProviderResponse `json:"oauth_providers"`
-	CreatedAt       time.Time               `json:"createdAt"`
-	UpdatedAt       time.Time               `json:"updatedAt"`
+	Username        *string                 `json:"username,omitempty"`
+	Phone           *string                 `json:"phone,omitempty"`
 	EmailVerified   bool                    `json:"email_verified"`
 	PhoneNoVerified bool                    `json:"phone_no_verified"`
+	Socials         []SocialAccountResponse `json:"socials"`
+	OAuthProviders  []OAuthProviderResponse `json:"oauth_providers"`
 	Gender          models.Gender           `json:"gender"`
-	DateOfBirth     time.Time               `json:"date_of_birth"`
-	City            string                  `json:"city"`
-	Bio             string                  `json:"bio"`
+	DateOfBirth     *time.Time              `json:"date_of_birth,omitempty"`
+	City            *string                 `json:"city,omitempty"`
+	Bio             *string                 `json:"bio,omitempty"`
+	College         *CollegeResponse        `json:"college,omitempty"`
+	CreatedAt       time.Time               `json:"created_at"`
+	UpdatedAt       time.Time               `json:"updated_at"`
 }
 
 func ToUserResponse(user models.User) UserResponse {
@@ -53,6 +63,18 @@ func ToUserResponse(user models.User) UserResponse {
 		})
 	}
 
+	var college *CollegeResponse
+	if user.College != nil {
+		college = &CollegeResponse{
+			ID:      user.College.ID,
+			Name:    user.College.Name,
+			Domain:  user.College.Domain,
+			City:    user.College.City,
+			State:   user.College.State,
+			Country: user.College.Country,
+		}
+	}
+
 	return UserResponse{
 		ID:              user.ID,
 		FirstName:       user.FirstName,
@@ -68,6 +90,7 @@ func ToUserResponse(user models.User) UserResponse {
 		DateOfBirth:     user.DateOfBirth,
 		City:            user.City,
 		Bio:             user.Bio,
+		College:         college,
 		CreatedAt:       user.CreatedAt,
 		UpdatedAt:       user.UpdatedAt,
 	}
